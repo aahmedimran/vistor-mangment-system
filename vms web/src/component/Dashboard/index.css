@@ -1,0 +1,36 @@
+*{
+    margin: 0%;
+    padding: 0%;
+    box-sizing: border-box;
+}
+.Dashboard-data{
+display: flex;
+flex-wrap: wrap;
+align-items: center;
+justify-content:space-around ;
+
+
+}
+.Dashboard-data-chalid1{
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 50px;
+}
+
+.Dashboard-data-chalid2{
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 50px;
+}
+
+.Dashboard-data-chalid3{
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 50px;
+}
+
+.Dashboard-data-chalid4{
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 50px;
+}
