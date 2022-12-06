@@ -34,13 +34,13 @@ mongoose.connect(dbURI);
 
 // const apiUrl = process.env.REACT_APP_BASE_URL
 
-
 // userSchema 
 let userSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   email: { type: String, required: true },
   password: { type: String, required: true },
+  updatedAt:{ type: Date, default: Date.now },
   creeatedOn: { type: Date, default: Date.now }
 
 })
@@ -51,10 +51,12 @@ const userModel = mongoose.model("User", userSchema);
 
 // deportmentSchema
 let deportmentSchema = new mongoose.Schema({
-  deportmentName: { type: String, required: true },
+  deportmentName: { type: String, required: true ,trim: true },
   contactPerson: { type: String, required: true },
   createdBy: { type: String, required: true  },
-  creeatedOn: { type: Date, default: Date.now }
+  updatedAt:{ type: Date,default: Date.now },
+  creeatedOn: { type: Date, default: Date.now ,timestamps: true },
+ 
 
 })
 const deportmentModel = mongoose.model("deportment", deportmentSchema);
@@ -287,9 +289,9 @@ app.put("/profile/:id", async (req, res) => {
   if (req.body._id) pupdate._id = req.body._id;
   try {
     let updated = await userModel
-      .findOneAndUpdate({ _id: req.params.id }, pupdate, { new: true })
+      .findOneAndUpdate({ _id: req.params.id }, pupdate, { new: true   })
       .exec();
-    console.log("profile updated", updated);
+   
 
     res.send({
       message: "profile updated seccesfully",
@@ -397,11 +399,11 @@ app.put("/deportment/:id", async (req, res) => {
 
   if (req.body.deportmentName) update.deportmentName = req.body.deportmentName;
   if (req.body.contactPerson) update.contactPerson = req.body.contactPerson;
-
+  if (req.body.updatedAt) update.updatedAt =  getTimestamp();
 
   try {
     let updated = await deportmentModel
-      .findOneAndUpdate({ _id: req.params.id }, update, { new: true })
+      .findOneAndUpdate({ _id: req.params.id }, update,  { new: true, timestamps:false  }, )
       .exec();
     console.log("deportment data updated", updated);
 
@@ -437,8 +439,6 @@ app.delete("/deportment/:id", async (req, res) => {
     });
   }
 });
-
-
 
 
 
