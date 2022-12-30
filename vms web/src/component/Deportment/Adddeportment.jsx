@@ -23,7 +23,6 @@ const Adddeportment = () => {
   const response = await HandleAddDeportment({
         deportmentName,
         contactPerson,
-        updatedAt:  Date.now(),
         createdBy: state.user._id
       })
       if (response) {
@@ -43,7 +42,7 @@ return (
       <br />
 
 
-      <button type='submit'>update</button>
+      <button type='submit'>Add Deportment</button>
     </form>
 
 
@@ -53,3 +52,6 @@ return (
 }
 
 export default Adddeportment
+
+
+

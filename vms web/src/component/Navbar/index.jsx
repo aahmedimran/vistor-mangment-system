@@ -1,24 +1,14 @@
 import React from 'react'
-import { Link } from "react-router-dom";
 import './index.css'
-import { useContext } from "react";
-import { GlobalContext } from '../../Context/context';
-import { LogoutHandler } from '../../services/services';
+
 
 const Navbar = () => {
-  let { state, dispatch } = useContext(GlobalContext);
-  const logoutHandler = async () => {
-    const response = await LogoutHandler({})
-    if (response) {
-      dispatch({ type: "USER_LOGOUT" });
-    }
 
-  };
 
   
   return (
     <>
-      <nav className="navbar">
+      {/* <nav className="navbar">
         <div className="navbar-container container">
           <input type="checkbox" name="" id="" />
           <div className="hamburger-lines">
@@ -62,40 +52,23 @@ const Navbar = () => {
             }
 
 
-            {/* {(state.isLogin === true) ?
-              <>
-                <li><Link to="/">Dashboard</Link></li>
-                <li><Link to="/Subuser">Subuser</Link></li>
-                <li><Link to="/Deportment">Deportment</Link></li>
-                <li><Link to="/Vistor">Vistor</Link></li>
-                <li><Link to="/Profile" >Profile</Link></li>
-                <li ><Link to="/Login" onClick={handleLogout}>Logout</Link></li>
-              </>
-              :
-              null
-            }
-            {(state.isLogin === false) ?
-              <>
-                <li><Link to="/">Dashboard</Link></li>
-                <li><Link to="/Login"  >Login</Link></li>
-                <li><Link to="/Signup"  >Signup</Link></li>
-
-              </>
-              :
-              null
-            }
-            {(state.isLogin === null) ?
-              <>
-                <h1>Loading</h1>
-              </>
-              :
-              null
-            }
- */}
-          </ul>
-          <h1 className="logo">VMS</h1>
         </div>
       </nav>
+
+
+
+
+ */}
+
+
+
+
+
+
+
+
+
+
 
     </>
   )

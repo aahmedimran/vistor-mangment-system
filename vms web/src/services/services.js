@@ -6,6 +6,7 @@ const signup = async (data)=>{
     try {
         const response = await axios.post(`${apiUrl}/signup`, data, {withCredentials: true})
         console.log(response, "response")
+        return response
       }
       catch  (e) {
         console.log("error in api call", e)

@@ -12,6 +12,10 @@ const {dispatch} = useContext(GlobalContext)
 
 
 
+
+
+
+
 useEffect(() => {
   
   const getProfile = async () => {
@@ -35,7 +39,8 @@ useEffect(() => {
     }
   }
 
-getProfile();
+  getProfile()
+
 }, [apiUrl, dispatch]);
 
 
@@ -43,6 +48,7 @@ getProfile();
 
   return (
     <>
+    <div style={{display :"flex"}}>
       <Approutes />
       <ToastContainer
         position="top-right"
@@ -58,6 +64,7 @@ getProfile();
       />
       {/* Same as */}
       <ToastContainer />
+      </div>
     </>
   );
 }

@@ -5,24 +5,42 @@
 }
 .container{
   display:flex;
+  width: 20%;
 }
 main{
   width: 100%;
   padding: 35px;
 }
+.top_section_icon{
+  display: flex;
+  align-items:center;
+  padding:20px 0px;
+}
+
+
+
 .sidebar{
-  background: #000;
+  background: rgb(19, 245, 19);
   color: #fff;
   height: 100vh;
   width: 200px;
   transition: all 0.5s;
-  flex-shrink: 0;
 }
 .top_section{
   display: flex;
   align-items:center;
   padding:20px 15px;
 }
+.top_section-dash{
+  display: flex;
+  align-items:center;
+  padding:20px 15px;
+
+}
+
+
+
+
 .logo{
   font-size: 30px;
 }
@@ -49,4 +67,8 @@ main{
 }
 .icon, .link_text{
   font-size: 20px;
+}
+.aa{
+  display: flex;
+  flex-direction: column;
 }

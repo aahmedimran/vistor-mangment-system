@@ -1,1 +1,16 @@
+*{
+    margin: 0%;
+    padding: 0%;
+}
 
+
+
+.vistor-main-firstchild,
+.vistor-main-secondchild
+{
+    display: flex;
+    justify-content: space-between;
+}
+.vistor-main-firstchild{
+    border-bottom: 2px solid black;
+}

@@ -8,7 +8,7 @@ let data = {
   user: {},
   isLogin: null,
   darkTheme: true,
-  cart: JSON.parse(localStorage.getItem("cartItem")) || [],
+  isLoading:null,
   baseUrl:
   window.location.href.indexOf("https") === -1
     ? "https://ecommrace-web-app.up.railway.app/"

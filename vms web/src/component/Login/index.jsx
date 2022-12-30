@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -17,6 +17,7 @@ import { toast } from 'react-toastify';
 import { useContext } from 'react';
 import { GlobalContext } from "../../Context/context";
 import { Loginhandler } from '../../services/services';
+import { useNavigate } from 'react-router';
 
 
 
@@ -27,10 +28,19 @@ const theme = createTheme();
 export default function Login() {
 
 
-  let { dispatch } = useContext(GlobalContext);
-
+  let { state, dispatch } = useContext(GlobalContext);
+  const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
+const user = state.user
+
+  useEffect(() => {
+
+    if (user) {
+      navigate("/")
+    }
+  }, [navigate, user])
 
 
   const handleSubmit = async (event) => {

@@ -1,4 +1,3 @@
-
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
@@ -6,12 +5,8 @@ import { stringToHash, varifyHash } from "bcrypt-inzi";
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
+import nodemailer from 'nodemailer'
 
-
-
-
-
-// app.use(express.urlencoded({ extended: true }));
 const port = process.env.port || 3001;
 const SECRET = process.env.SECRET || "topsecret";
 const app = express();
@@ -20,7 +15,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://ecommrace-web-app.up.railway.app", "*"],
+    origin: ["http://localhost:3000", "*"],
 
     credentials: true,
   })
@@ -32,7 +27,7 @@ let dbURI =
   "mongodb+srv://abc:abc@cluster0.olyure1.mongodb.net/socialmediaapp?retryWrites=true&w=majority";
 mongoose.connect(dbURI);
 
-// const apiUrl = process.env.REACT_APP_BASE_URL
+
 
 // userSchema 
 let userSchema = new mongoose.Schema({
@@ -40,9 +35,11 @@ let userSchema = new mongoose.Schema({
   lastName: { type: String, required: true },
   email: { type: String, required: true },
   password: { type: String, required: true },
-  updatedAt:{ type: Date, default: Date.now },
-  creeatedOn: { type: Date, default: Date.now }
+  isVarifed: { type: Boolean, default:false },
+  otp:{type :String}
 
+}, {
+  timestamps: true
 })
 const userModel = mongoose.model("User", userSchema);
 
@@ -51,21 +48,50 @@ const userModel = mongoose.model("User", userSchema);
 
 // deportmentSchema
 let deportmentSchema = new mongoose.Schema({
-  deportmentName: { type: String, required: true ,trim: true },
+  deportmentName: { type: String, required: true, trim: true },
   contactPerson: { type: String, required: true },
-  createdBy: { type: String, required: true  },
-  updatedAt:{ type: Date,default: Date.now },
-  creeatedOn: { type: Date, default: Date.now ,timestamps: true },
- 
+  createdBy: { type: String, required: true }
+}
+,
+{
+  timestamps: true
+},
 
-})
+)
 const deportmentModel = mongoose.model("deportment", deportmentSchema);
 
 
 
 
 
+app.post("/verifyOTP", async (req, res) => {
+  try {
+    let { email, otp } = req.body;
+    if (!email || !otp) {
+      return res.status(400).send("empty otp details ate not allowed");
+    } else {
+      const user = await userModel.findOne({ email });
+      if (otp === user.otp) {
+        await userModel.updateOne({ email }, { isVarifed: true, otp: null });
+        
+        return res.status(200).send({ message: "correct otp" });
+      } else {
+        return res.status(403).send({ message: "incorrect otp" });
+      }
+    }
+  } catch (error) {
+    console.log(error, "error");
+    res.json({
+      status: "failed",
+      message: "error.message",
+    });
+  }
+});
 
+
+
+
+// signUp
 
 app.post('/signup', (req, res) => {
   let body = req.body
@@ -101,23 +127,55 @@ password = '12345'
         //user not already exist
 
         stringToHash(body.password).then((hashString) => {
+
+          const otp = `${Math.floor(1000 + Math.random() * 900000)}`;
+
+          let transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+              user: "ahmed.eng2709@gmail.com",
+              pass: "reylbhjxktkesqne",
+            },
+          });
+
+          let mailOptions = {
+            from: "ahmed.eng2709@gmail.com",
+            to: body.email,
+            subject: "Sending Email Using Node.js",
+            html: `<p>Enter <b>${otp} </b> in the app to verifiy your email address and complete</p>`,
+          };
+
+          transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log("Email sent: " + info.response);
+            }
+
+
+          });
+
+
           userModel.create(
             {
               firstName: body.firstName,
               lastName: body.lastName,
               email: body.email.toLowerCase(),
               password: hashString,
-            },
-            (err, result) => {
-              if (!err) {
-                console.log("data saved:", result);
-                res.status(201).send({ message: "user is created" });
-              } else {
-                console.log("db error: ", err);
-                res.status(500).send({ message: "internal server error" });
-              }
-            }
-          );
+              otp,
+            })
+            .then((result) => {
+              console.log("data saved: ", result);
+              res.status(200).send({ message: "user is created" });
+            })
+            .catch((err) => {
+              console.log("db error: ", err);
+              res.status(500).send({ message: "internal server error" });
+            });
+
+
+
+
         });
       }
     } else {
@@ -128,6 +186,8 @@ password = '12345'
   });
 });
 
+
+// login
 
 app.post("/login", (req, res) => {
   let body = req.body;
@@ -149,23 +209,22 @@ app.post("/login", (req, res) => {
   userModel.findOne(
     { email: body.email },
     // { email:1, firstName:1, lastName:1, age:1, password:0 },
-    "email firstName lastName password",
-    (err, data) => {
+    "email firstName lastName password isVarifed",
+    (err, user) => {
       if (!err) {
-        console.log("data: ", data);
 
-        if (data) {
+        if (user) {
           // user found
-          varifyHash(body.password, data.password).then((isMatched) => {
+          varifyHash(body.password, user.password).then((isMatched ) => {
             console.log("isMatched: ", isMatched);
-
-            if (isMatched) {
+           
+            if (isMatched && user.isVarifed) {
               //  JWT token
 
               var token = jwt.sign(
                 {
-                  _id: data._id,
-                  email: data.email,
+                  _id: user._id,
+                  email: user.email,
                   iat: Math.floor(Date.now() / 1000) - 30,
                   exp: Math.floor(Date.now() / 1000) + 60 * 60,
                 },
@@ -182,10 +241,10 @@ app.post("/login", (req, res) => {
               res.send({
                 message: "login successful",
                 profile: {
-                  email: data.email,
-                  firstName: data.firstName,
-                  lastName: data.lastName,
-                  _id: data._id,
+                  email: user.email,
+                  firstName: user.firstName,
+                  lastName: user.lastName,
+                  _id: user._id,
 
                 },
               });
@@ -260,6 +319,10 @@ app.use(function (req, res, next) {
   });
 });
 
+
+
+
+
 // logOut Handler
 
 app.post("/logout", (req, res) => {
@@ -289,9 +352,9 @@ app.put("/profile/:id", async (req, res) => {
   if (req.body._id) pupdate._id = req.body._id;
   try {
     let updated = await userModel
-      .findOneAndUpdate({ _id: req.params.id }, pupdate, { new: true   })
+      .findOneAndUpdate({ _id: req.params.id }, pupdate, { new: true })
       .exec();
-   
+
 
     res.send({
       message: "profile updated seccesfully",
@@ -331,12 +394,15 @@ app.post("/deportment", async (req, res) => {
   })
   try {
     let response = await newDeportment.save()
+
     console.log("deportment added: ", response);
+
 
     res.send({
       message: "deportment added",
       data: response
     });
+
   } catch (error) {
     res.status(500).send({
       message: "failed to create deportment"
@@ -354,7 +420,7 @@ app.get("/deportment", async (req, res) => {
   try {
     let deportment = await deportmentModel.find({}).exec();
 
-    console.log("all deportment", deportment);
+    // console.log("all deportment");
 
     res.send({
       message: "all deportment",
@@ -365,6 +431,7 @@ app.get("/deportment", async (req, res) => {
       message: "falled to get deportment",
     });
   }
+  console.log("all deportment 🚑🚑🚑🚑🚑🚑");
 });
 
 
@@ -399,11 +466,11 @@ app.put("/deportment/:id", async (req, res) => {
 
   if (req.body.deportmentName) update.deportmentName = req.body.deportmentName;
   if (req.body.contactPerson) update.contactPerson = req.body.contactPerson;
-  if (req.body.updatedAt) update.updatedAt =  getTimestamp();
+
 
   try {
     let updated = await deportmentModel
-      .findOneAndUpdate({ _id: req.params.id }, update,  { new: true, timestamps:false  }, )
+      .findOneAndUpdate({ _id: req.params.id }, update, { new: true },)
       .exec();
     console.log("deportment data updated", updated);
 

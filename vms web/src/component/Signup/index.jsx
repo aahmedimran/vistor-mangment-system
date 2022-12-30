@@ -1,4 +1,4 @@
-import * as React from 'react';
+import  React,{useEffect,useContext} from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -14,31 +14,43 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-// import axios from 'axios';
-// import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import { signup } from '../../services/services';
+import { GlobalContext } from '../../Context/context';
 
 
 const theme = createTheme();
 
 export default function SignUp() {
-
-
-  // const navigate = useNavigate()
-
-
-
-
+const {state} = useContext(GlobalContext)
+  
   //input states manages
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  
+  
+  
+  const navigate = useNavigate()
+  const user = state.user
+
+  useEffect(() => {
+
+    if (user) {
+      navigate("/")
+    }
+  }, [navigate, user])
+
+
+
+
+
+
 
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
 
     if (!firstName) {
       toast.error("Please enter First Name")
@@ -57,32 +69,20 @@ export default function SignUp() {
       return
     }
 
-    await signup({
+    const response = await signup({
       firstName,
       lastName,
       email,
       password,
-
-
     })
+    if (response) {
 
-    // try {
+      localStorage.setItem('email', email);
+      navigate("/Otp")
+    }
 
-    //   const response = await axios.post(`${apiUrl}/signup`, {
-    //     firstName,
-    //     lastName,
-    //     email,
-    //     password,
-    //   }, {withcredentials: true})
-    //   console.log(response, "response")
-    //   console.log(response.data, "response")
-    //   toast.success("Signup Success")
 
-    // }
-    // catch  (e) {
-    //   console.log("error in api call", e)
-    //   toast.error("email or password incorrect")
-    // }
+
   };
 
   return (

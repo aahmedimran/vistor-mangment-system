@@ -1,12 +1,63 @@
-*,
-*::after,
-*::before {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+* {
+  margin: 0%;
+  padding: 0%;
 }
-window {
+
+
+.profile-container {
+  text-align: center;
+}
+
+.profile-main {
+  border: 2px solid black;
+  display: inline-block;
   padding: 20px;
-  background-color: #f44336;
-  color: white;
+  border-radius: 10px;
+  border-width: medium;
+  width: 60vh;
+  height: 70vh;
+  text-align: center;
+}
+.profile-from {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.profile-inputs {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px;
+}
+.profile-inputs > input{
+border: none;
+border-bottom: 2px solid black;
+outline: none;
+/* width: 90vw; */
+
+}
+.profile-btn {
+  margin-top: 20px;
+}
+
+.subuser-input-usererror {
+  height: 1rem;
+  width: 87%;
+  display: flex;
+  justify-content: flex-end;
+}
+.subuser-input-Emailerror {
+  height: 1rem;
+  width: 83%;
+  display: flex;
+  justify-content: flex-end;
+}
+.subuser-input-Passworderror {
+  height: 1rem;
+  width: 24vw;
+  display: flex;
+  justify-content: flex-end;
 }

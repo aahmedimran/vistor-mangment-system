@@ -1,11 +1,14 @@
-// import React,{useContext} from 'react'
-// import { Outlet,Navigate } from 'react-router'
-// import { GlobalContext } from '../Context/context';
+import React,{useContext} from 'react'
+import { Outlet,Navigate } from 'react-router'
+import { GlobalContext } from '../Context/context';
 
 
-// const Protactiveroutes = () => {
-//   let { state } = useContext(GlobalContext);
-//   return  state.isLogin ===true ?  <Outlet/> : <Navigate to="/"/> 
-// }
+const Protactiveroutes = () => {
+  let { state } = useContext(GlobalContext);
 
-// export default Protactiveroutes
+  const user = state.user
+
+  return  user ?  <Outlet/> : <Navigate to="/"/> 
+}
+
+export default Protactiveroutes
