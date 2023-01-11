@@ -20,25 +20,21 @@ import { Loginhandler } from '../../services/services';
 import { useNavigate } from 'react-router';
 
 
-
-
 const theme = createTheme();
 
-
 export default function Login() {
-
 
   let { state, dispatch } = useContext(GlobalContext);
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-const user = state.user
+  const user = state.user
 
   useEffect(() => {
 
     if (user) {
-      navigate("/")
+      navigate("/Dashboard")
     }
   }, [navigate, user])
 
@@ -60,6 +56,7 @@ const user = state.user
     })
     if (response) {
       dispatch({ type: "USER_LOGIN", payload: response.data.profile });
+      navigate("/Dashboard")
     }
 
   };

@@ -1,12 +1,12 @@
 {
-  "name": "vms-api",
+  "name": "server",
   "version": "1.0.0",
-  "description": "vistor mangment system",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.mjs",
-    "dev": "nodemon index.mjs"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
@@ -15,17 +15,10 @@
     "body-parser": "^1.20.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
-    "dirname": "^0.1.0",
-    "ejs": "^3.1.8",
-    "ejs-lint": "^2.0.0",
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "html-pdf": "^3.0.1",
-    "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.7.4",
-    "nodemailer": "^6.8.0",
-    "path-dirname": "^1.0.2",
-    "pdfkit": "^0.13.0",
-    "react-scripts": "^5.0.1",
-    "url": "^0.11.0"
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^6.8.3",
+    "nodemailer": "^6.8.0"
   }
 }

@@ -20,7 +20,7 @@ import { NavLink } from "react-router-dom";
 
 
 
-const Sidebar = (Children) => {
+const Sidebar = () => {
 
   let { state, dispatch } = useContext(GlobalContext);
   const logoutHandler = async () => {
@@ -32,7 +32,6 @@ const Sidebar = (Children) => {
   };
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
-
 
 
 
@@ -50,16 +49,148 @@ const Sidebar = (Children) => {
           {/* rrrr */}
 
 
-      
+
 
           <ul>
 
-            {(state.isLogin === true) ?
-              <div>
-                <NavLink to="/">
-                  <div className="top_section-dash">
+            {(state?.isLogin === true) ?
 
-                    <div style={{ marginLeft: isOpen ? "0px" : "0px" }} className="bars">
+
+              <>
+                {state?.user?.role === "admin" ? <>
+
+                  <NavLink to="/Dashboard">
+                    <div className="top_section-dash">
+                      <div>
+                        <FaTh />
+                      </div>
+                      <div style={{ display: isOpen ? "block" : "none" }} className="icon" >
+                        Dashboard
+                      </div>
+
+                    </div>
+                  </NavLink>
+                  <NavLink to="/Profile">
+                    <div className="top_section">
+                      <div>
+                        <FaUserAlt />
+                      </div>
+                      <div style={{ display: isOpen ? "block" : "none" }} className="icon" >
+                        Profile
+                      </div>
+
+                    </div>
+                  </NavLink>
+                  <NavLink to="/Vistor">
+                    <div className="top_section">
+                      <div>
+                        <FaMapMarkedAlt />
+                      </div>
+                      <div style={{ display: isOpen ? "block" : "none" }} className="icon" >
+                        Vistor
+                      </div>
+
+                    </div>
+                  </NavLink>
+
+                  <NavLink to="/Subuser">
+                    <div className="top_section">
+                      <div>
+                        <HiUsers />
+                      </div>
+                      <div style={{ display: isOpen ? "block" : "none" }} className="icon" >
+                        Subuser
+                      </div>
+
+                    </div>
+                  </NavLink>
+
+
+                  <NavLink to="/Deportment">
+                    <div className="top_section">
+                      <div>
+                        <FcDepartment />
+                      </div>
+                      <div style={{ display: isOpen ? "block" : "none" }} className="icon" >
+                        Deportment
+                      </div>
+
+                    </div>
+                  </NavLink>
+
+                  <NavLink to="/" onClick={logoutHandler}>
+                    <div className="top_section">
+                      <div>
+                        <BiLogOut />
+                      </div>
+                      <div style={{ display: isOpen ? "block" : "none" }} className="icon" >
+                        logout
+                      </div>
+
+                    </div>
+                  </NavLink>
+
+
+
+
+
+
+                </> : <>
+
+                  <NavLink to="/Dashboard">
+                    <div className="top_section-dash">
+                      <div>
+                        <FaTh />
+                      </div>
+                      <div style={{ display: isOpen ? "block" : "none" }} className="icon" >
+                        Dashboard
+                      </div>
+
+                    </div>
+                  </NavLink>
+                  <NavLink to="/Profile">
+                    <div className="top_section">
+                      <div>
+                        <FaUserAlt />
+                      </div>
+                      <div style={{ display: isOpen ? "block" : "none" }} className="icon" >
+                        Profile
+                      </div>
+
+                    </div>
+                  </NavLink>
+                  <NavLink to="/Uservistor">
+                    <div className="top_section">
+                      <div>
+                        <FaMapMarkedAlt />
+                      </div>
+                      <div style={{ display: isOpen ? "block" : "none" }} className="icon" >
+                        Vistor
+                      </div>
+
+                    </div>
+                  </NavLink>
+
+                  <NavLink to="/" onClick={logoutHandler}>
+                    <div className="top_section">
+                      <div>
+                        <BiLogOut />
+                      </div>
+                      <div style={{ display: isOpen ? "block" : "none" }} className="icon" >
+                        logout
+                      </div>
+
+                    </div>
+                  </NavLink>
+
+
+
+
+
+                </>}
+                {/* <NavLink to="/Dashboard">
+                  <div className="top_section-dash">
+                    <div>
                       <FaTh />
                     </div>
                     <div style={{ display: isOpen ? "block" : "none" }} className="icon" >
@@ -70,7 +201,7 @@ const Sidebar = (Children) => {
                 </NavLink>
                 <NavLink to="/Profile">
                   <div className="top_section">
-                    <div style={{ marginLeft: isOpen ? "0px" : "0px" }} >
+                    <div>
                       <FaUserAlt />
                     </div>
                     <div style={{ display: isOpen ? "block" : "none" }} className="icon" >
@@ -81,7 +212,7 @@ const Sidebar = (Children) => {
                 </NavLink>
                 <NavLink to="/Vistor">
                   <div className="top_section">
-                    <div style={{ marginLeft: isOpen ? "0px" : "0px" }} >
+                    <div>
                       <FaMapMarkedAlt />
                     </div>
                     <div style={{ display: isOpen ? "block" : "none" }} className="icon" >
@@ -93,7 +224,7 @@ const Sidebar = (Children) => {
 
                 <NavLink to="/Subuser">
                   <div className="top_section">
-                    <div style={{ marginLeft: isOpen ? "0px" : "0px" }} >
+                    <div>
                       <HiUsers />
                     </div>
                     <div style={{ display: isOpen ? "block" : "none" }} className="icon" >
@@ -106,7 +237,7 @@ const Sidebar = (Children) => {
 
                 <NavLink to="/Deportment">
                   <div className="top_section">
-                    <div style={{ marginLeft: isOpen ? "0px" : "0px" }} >
+                    <div>
                       <FcDepartment />
                     </div>
                     <div style={{ display: isOpen ? "block" : "none" }} className="icon" >
@@ -116,9 +247,9 @@ const Sidebar = (Children) => {
                   </div>
                 </NavLink>
 
-                <NavLink to="/login" onClick={logoutHandler}>
+                <NavLink to="/" onClick={logoutHandler}>
                   <div className="top_section">
-                    <div style={{ marginLeft: isOpen ? "0px" : "0px" }} >
+                    <div>
                       <BiLogOut />
                     </div>
                     <div style={{ display: isOpen ? "block" : "none" }} className="icon" >
@@ -126,46 +257,57 @@ const Sidebar = (Children) => {
                     </div>
 
                   </div>
-                </NavLink>
+                </NavLink> */}
 
-              </div>
+              </>
 
               :
-              null
-            }
-
-{(state.isLogin === false) ?
               <>
-                 <NavLink to="/">
-                  <div className="top_section-dash">
-
-                    <div style={{ marginLeft: isOpen ? "0px" : "0px" }} className="bars">
-                      <FaTh />
-                    </div>
-                    <div style={{ display: isOpen ? "block" : "none" }} className="icon" >
-                      Dashboard
-                    </div>
-
-                  </div>
-                </NavLink>
-                <NavLink to="/login">
+                <NavLink to="/">
                   <div className="top_section">
-                    <div style={{ marginLeft: isOpen ? "0px" : "0px" }} >
+                    <div>
                       <MdOutlineLogin />
                     </div>
                     <div style={{ display: isOpen ? "block" : "none" }} className="icon" >
-                    login
+                      login
                     </div>
 
                   </div>
                 </NavLink>
                 <NavLink to="/signUp">
                   <div className="top_section">
-                    <div style={{ marginLeft: isOpen ? "0px" : "0px" }} >
+                    <div>
                       <SiGnuprivacyguard />
                     </div>
                     <div style={{ display: isOpen ? "block" : "none" }} className="icon" >
-                    signUp
+                      signUp
+                    </div>
+
+                  </div>
+                </NavLink>
+              </>
+            }
+
+            {/* {(state.isLogin === false) ?
+              <>
+                <NavLink to="/">
+                  <div className="top_section">
+                    <div>
+                      <MdOutlineLogin />
+                    </div>
+                    <div style={{ display: isOpen ? "block" : "none" }} className="icon" >
+                      login
+                    </div>
+
+                  </div>
+                </NavLink>
+                <NavLink to="/signUp">
+                  <div className="top_section">
+                    <div>
+                      <SiGnuprivacyguard />
+                    </div>
+                    <div style={{ display: isOpen ? "block" : "none" }} className="icon" >
+                      signUp
                     </div>
 
                   </div>
@@ -173,25 +315,15 @@ const Sidebar = (Children) => {
               </>
               :
               null
-            }
-
-
-            {/* {
-
-              (state.isLogin === null) ?
-
-                <div>Loading....</div>
-                :
-                null
             } */}
 
           </ul>
         </div>
 
-       {/* <main>{Children}</main> */}
+        {/* <main>{Children}</main> */}
       </div>
 
-    
+
     </>
   )
 }

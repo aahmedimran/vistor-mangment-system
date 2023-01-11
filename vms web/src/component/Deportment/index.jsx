@@ -9,7 +9,7 @@ import autoTable from 'jspdf-autotable' // eslint-disable-line
 import { HashLoader } from "react-spinners";
 
 const Deportment = () => {
-  const apiUrl = process.env.REACT_APP_BASE_URL
+
   const navigate = useNavigate()
   const [getDeportment, setgetDeportment] = useState([])
   const [togllReload, settogllReload] = useState(true)
@@ -26,7 +26,7 @@ const Deportment = () => {
   useEffect(() => {
     let getDeportment = async () => {
       try {
-        let response = await axios.get(`${apiUrl}/deportment`, { withCredentials: true })
+        let response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/GetDeportment`, { withCredentials: true })
 
         if (response.status === 200) {
           console.log("response : ", response.data);
@@ -42,7 +42,7 @@ const Deportment = () => {
       }
     }
     getDeportment();
-  }, [apiUrl, togllReload])
+  }, [togllReload])
 
 
 
@@ -56,14 +56,15 @@ const Deportment = () => {
   const handleUpdate = async (e) => {
     e.preventDefault()
     try {
-      let response = await axios.put(`${apiUrl}/deportment/${editDeportment._id}`,
+      let response = await axios.put(`${process.env.REACT_APP_BASE_URL}/api/UpdateDeportment/${editDeportment._id}`,
         {
           deportmentName: editDeportment.deportmentName,
           contactPerson: editDeportment.contactPerson
         },
         { withCredentials: true })
       console.log(response, "response")
-
+      settogllReload(!togllReload)
+      seteditDeportment(null)
     }
     catch (e) {
       console.log(e, "error in api call")
@@ -211,7 +212,7 @@ const Deportment = () => {
                             }} >Edit</button>
                               <button type='submit' onClick={async () => {
                                 try {
-                                  let response = await axios.delete(`${apiUrl}/deportment/${getallDeportment?._id}`, { withCredentials: true })
+                                  let response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/api/DeleteDeportment/${getallDeportment?._id}`, { withCredentials: true })
                                   console.log(response, "response")
                                   settogllReload(!togllReload)
                                 }

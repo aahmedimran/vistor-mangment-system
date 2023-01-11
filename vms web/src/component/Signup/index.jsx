@@ -38,7 +38,7 @@ const {state} = useContext(GlobalContext)
   useEffect(() => {
 
     if (user) {
-      navigate("/")
+      navigate("/Dashboard")
     }
   }, [navigate, user])
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Dashboard from '../component/Dashboard';
 import Deportment from '../component/Deportment';
@@ -12,6 +12,10 @@ import Adddeportment from '../component/Deportment/Adddeportment';
 import Sidebar from '../component/Sidebar';
 import Otp from '../component/Otp';
 import Protactiveroutes from './ProtactiveRoutes';
+import User from '../component/Deportment/userComp/user';
+import { GlobalContext } from '../Context/context';
+import Any from '../component/Deportment/userVistor';
+import Uservistor from '../pages/Uservistor';
 
 
 
@@ -20,7 +24,9 @@ import Protactiveroutes from './ProtactiveRoutes';
 const Approutes = () => {
 
 
+  let { state } = useContext(GlobalContext);
 
+  // const role = state.user.data.role 
   return (
     <>
 
@@ -30,17 +36,45 @@ const Approutes = () => {
         <div className="App">
           <Routes>
 
-            <Route element={<Protactiveroutes />}>
+            { <Route element={<Protactiveroutes />}>
+
+              {state?.user?.role  === "admin" ?
+                <>
+
+                  <Route element={<Dashboard />} path='/Dashboard' />
+                  <Route element={<Profile />} path='/Profile' />
+                  <Route element={<Vistor />} path='/Vistor' />
+                  <Route element={<Subuser />} path='/Subuser' />
+                  <Route element={<Deportment />} path='/Deportment' />
+                  <Route element={<Adddeportment />} path='/Adddeportment' />
+               
+                </>
+                :
+                <>
+                 <Route element={<Dashboard />} path='/Dashboard' />
+                  <Route element={<Profile />} path='/Profile' />
+                  <Route element={<Uservistor />} path='/Uservistor' />
+                <Route element={<User />} path='/User' />
+                <Route element={<Any />} path='/Any' />
+                </>
+              }
+            </Route> }
+
+
+
+            {/* <Route element={<Protactiveroutes />}>
+              <Route element={<Dashboard />} path='/Dashboard' />
               <Route element={<Profile />} path='/Profile' />
               <Route element={<Vistor />} path='/Vistor' />
               <Route element={<Subuser />} path='/Subuser' />
               <Route element={<Deportment />} path='/Deportment' />
               <Route element={<Adddeportment />} path='/Adddeportment' />
 
-            </Route>
+            </Route> */}
+
             <Route>
-              <Route element={<Dashboard />} path='/' />
-              <Route element={<Login />} path='/Login' />
+              {/* <Route element={<Dashboard />} path='/' /> */}
+              <Route element={<Login />} path='/' />
               <Route element={<Signup />} path='/Signup' />
               <Route element={<Otp />} path='/Otp' />
             </Route>

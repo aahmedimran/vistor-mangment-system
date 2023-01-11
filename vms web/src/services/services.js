@@ -1,47 +1,45 @@
 import axios from 'axios'
 import { toast } from 'react-toastify';
-const apiUrl = process.env.REACT_APP_BASE_URL
 
-const signup = async (data)=>{
-    try {
-        const response = await axios.post(`${apiUrl}/signup`, data, {withCredentials: true})
-        console.log(response, "response")
-        return response
-      }
-      catch  (e) {
-        console.log("error in api call", e)
-      }
-}
-
-const Loginhandler = async (data) =>{
-  try{
-    const response = await axios.post(`${apiUrl}/login`,data,{withCredentials: true})
+const signup = async (data) => {
+  try {
+    const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/signup`, data, { withCredentials: true })
     console.log(response, "response")
     return response
-    }
-    catch(e){console.log(e,"error")
+  }
+  catch (e) {
+    console.log("error in api call", e)
+  }
+}
+
+const Loginhandler = async (data) => {
+  try {
+    const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/Login`, data, { withCredentials: true })
+    console.log(response, "response")
+    return response
+  }
+  catch (e) {
+    console.log(e, "error")
     toast.error("Email Or Password Incorrect")
   }
 }
 
 const LogoutHandler = async (data) => {
   try {
-    let response = await axios.post(`${apiUrl}/logout`,data, { withCredentials: true } )
+    let response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/logout`, data, { withCredentials: true })
     console.log(response, "response")
     return response
   }
-  catch (e) { console.log("error in api call", e)}
+  catch (e) { console.log("error in api call", e) }
 }
 
 const HandleAddDeportment = async (data) => {
   try {
-    const response = await axios.post(`${apiUrl}/deportment`, data, {withCredentials: true})
-    console.log(response, "response")
+    const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/AddDeportment`, data, { withCredentials: true })
+    console.log(response.data, "response")
     return response
   }
-  catch  (e) {
-    console.log("error in api call", e)
-  }
+  catch (e) { console.log("error in api call", e) }
 }
 
-export { signup ,Loginhandler, LogoutHandler, HandleAddDeportment}
+export { signup, Loginhandler, LogoutHandler, HandleAddDeportment }
