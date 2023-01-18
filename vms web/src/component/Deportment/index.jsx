@@ -8,6 +8,7 @@ import { jsPDF } from "jspdf";
 import autoTable from 'jspdf-autotable' // eslint-disable-line
 import { HashLoader } from "react-spinners";
 
+
 const Deportment = () => {
 
   const navigate = useNavigate()
@@ -34,6 +35,7 @@ const Deportment = () => {
           setloading(false)
 
           setgetDeportment(response.data.data.reverse())
+
         } else {
           console.log("Error in api call: ");
         }
@@ -43,8 +45,6 @@ const Deportment = () => {
     }
     getDeportment();
   }, [togllReload])
-
-
 
   // Get currant page
 
@@ -76,19 +76,28 @@ const Deportment = () => {
 
   const pdfGenrate = () => {
 
-    console.log("clicked");
     const doc = new jsPDF();
-    doc.text("Deportment details", 80, 20);
+    const date = new moment(Date()).format('L LT')
+    doc.setFontSize(30);
+    doc.text("Deportment Details",60, 20);
+    doc.setFontSize(16);
+    doc.text("Date : " + date,125,55)
     const columns = [
-      "Id",
       "Deportment Name",
       "Contact Person",
-      "Creeated On",
+      "Created At",
       "Updated By"
 
     ];
     const rows = [];
-    getDeportment.map((item) => rows.push(Object.values(item)));
+    getDeportment.forEach((item) => {
+      const temp = {...item}
+      temp.createdAt = moment(temp.createdAt).format('L LT')
+      temp.updatedAt = moment(temp.updatedAt).format('L LT')
+      delete temp['createdBy']
+      delete temp['_id']
+      rows.push(Object.values(temp))
+    });
 
     doc.autoTable(columns, rows, {
 
@@ -156,7 +165,7 @@ const Deportment = () => {
                 <div className='deportment-main-header'>
                   <div>
                     <div className='deportment-main-firstchild' >
-                      <babel htmlFor="item">Show</babel>
+                      <label htmlFor="item">Show</label>
                       <input type="text" value={currantPost.length} />
                       <label htmlFor="item">Entities</label>
                     </div>
@@ -190,16 +199,15 @@ const Deportment = () => {
                       {/* all add on condinoly  */}
                       {currantPost.filter(
                         (getallDeportment) =>
-
-                          // keys.some((key)=>getallDeportment[key].toLowerCase().includes(filterData))
                           getallDeportment.deportmentName.toLowerCase().includes(filterData)
-                          || getallDeportment.contactPerson.toLowerCase().includes(filterData)
+                        // || getallDeportment.contactPerson.toLowerCase().includes(filterData)
+
                       )
                         .map((getallDeportment) => (
 
                           <tr key={getallDeportment._id}>
-                            <td>{getallDeportment.deportmentName}</td>
-                            <td>{getallDeportment.contactPerson}</td>
+                            <td>{getallDeportment?.deportmentName}</td>
+                            <td>{getallDeportment?.contactPerson}</td>
                             <td> {moment(getallDeportment.createdAt).format('l LT')}</td>
                             <td>{moment(getallDeportment.updatedAt).format('L LT')}</td>
                             <td>  <button type='submit' onClick={async () => {
@@ -229,6 +237,7 @@ const Deportment = () => {
                 </div>
               </div>
               <div className='pagination'>
+
                 <Deportmentpagination postPerpage={postPerpage} totalPosts={getDeportment.length}
                   setcurrantPage={setcurrantPage} />
 
