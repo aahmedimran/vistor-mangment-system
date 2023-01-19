@@ -53,7 +53,6 @@ const deportment = {
 
   },
 
-
   GetSingleDeportment: async (req, res) => {
     console.log("deportment: ", req.body);
 
@@ -99,6 +98,29 @@ const deportment = {
     }
   },
 
+  GetDeportmentspacific: async (req, res) => {
+    console.log("data to be edited  :", req.body);
+
+    try {
+      let deportment = await deportmentModel
+        .find({ createdBy: req.params.id  } || {adminId: req.params.id })
+        .exec();
+      console.log("deportment", deportment);
+
+      res.send({
+        message: "deportment  seccesfully",
+        data: deportment,
+      });
+    } catch (error) {
+      res.status(500).send({
+        message: "deportment gettting error",
+      });
+    }
+
+  },
+
+
+
 DeleteDeportment :async(req,res)=>{
   console.log("data to be edited  :", req.body);
 
@@ -106,8 +128,7 @@ DeleteDeportment :async(req,res)=>{
     let deleted = await deportmentModel
       .deleteOne({ _id: req.params.id })
       .exec();
-    console.log("deportment deleted", deleted);
-
+      console.log("deportment deleted", deleted);
     res.send({
       message: "deportment deleted seccesfully",
       data: deleted,
