@@ -7,10 +7,12 @@ import moment from 'moment'
 import { jsPDF } from "jspdf";
 import autoTable from 'jspdf-autotable' // eslint-disable-line
 import { HashLoader } from "react-spinners";
+import { useContext } from 'react'
+import { GlobalContext } from '../../Context/context'
 
 
 const Deportment = () => {
-
+const {state} = useContext(GlobalContext)
   const navigate = useNavigate()
   const [getDeportment, setgetDeportment] = useState([])
   const [togllReload, settogllReload] = useState(true)
@@ -27,7 +29,8 @@ const Deportment = () => {
   useEffect(() => {
     let getDeportment = async () => {
       try {
-        let response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/GetDeportment`, { withCredentials: true })
+      
+        let response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/GetDeportmentspacific/${state.user._id}`, { withCredentials: true })
 
         if (response.status === 200) {
           console.log("response : ", response.data);
@@ -44,7 +47,7 @@ const Deportment = () => {
       }
     }
     getDeportment();
-  }, [togllReload])
+  }, [state.user._id])
 
   // Get currant page
 
@@ -75,7 +78,6 @@ const Deportment = () => {
 
 
   const pdfGenrate = () => {
-
     const doc = new jsPDF();
     const date = new moment(Date()).format('L LT')
     doc.setFontSize(30);
@@ -235,6 +237,7 @@ const Deportment = () => {
                     </tbody>
                   </table>
                 </div>
+                
               </div>
               <div className='pagination'>
 
