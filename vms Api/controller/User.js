@@ -9,7 +9,7 @@ const User = {
 
     let body = req.body;
     console.log("body", body);
-  
+
     if (!body.email || !body.password) {
       // null check - undefined, "", 0 , false, null , NaN
       res.status(400).send(
@@ -21,7 +21,7 @@ const User = {
       );
       return;
     }
-  
+
     // check if user already exist // query email user
     userModel.findOne(
       { email: body.email },
@@ -29,15 +29,15 @@ const User = {
       "email firstName lastName password isVarifed adminId role",
       (err, user) => {
         if (!err) {
-  
+
           if (user) {
             // user found
             varifyHash(body.password, user.password).then((isMatched) => {
               console.log("isMatched: ", isMatched);
-  
+
               if (isMatched && user.isVarifed) {
                 //  JWT token
-  
+
                 var token = jwt.sign(
                   {
                     _id: user._id,
@@ -47,24 +47,24 @@ const User = {
                   },
                   process.env.JSON_SECRET
                 );
-  
+
                 console.log("token :", token);
                 //token send on cookies
                 res.cookie("token", token, {
                   maxAge: 86_400_00,
                   httpOnly: true, //httpOnly cookies most secure
                 });
-  
+
                 res.send({
                   message: "login successful",
                   profile: {
                     email: user.email,
                     firstName: user.firstName,
                     lastName: user.lastName,
-                    adminId : user.adminId,
+                    adminId: user.adminId,
                     role: user.role,
                     _id: user._id,
-  
+
                   },
                 });
                 return;
@@ -92,7 +92,7 @@ const User = {
   SignUp: async (req, res) => {
     let body = req.body
     console.log(body, "body")
-    if (!body.firstName || !body.lastName || !body.email || !body.password) {
+    if (!body.firstName || !body.lastName || !body.email || !body.password || !body.role) {
       res.status(400).send(
         `
   required filled missing, request example
@@ -100,6 +100,7 @@ const User = {
   firstName = 'john'
   lastName = 'doe
   email = 'abc@abc.com'
+  "role" : "admin,user"
   password = '12345'
   }`
       );
@@ -158,11 +159,17 @@ const User = {
                 lastName: body.lastName,
                 email: body.email.toLowerCase(),
                 password: hashString,
+                role: body.role,
                 otp,
               })
               .then((result) => {
                 console.log("data saved: ", result);
-                res.status(200).send({ message: "user is created" });
+                res.status(200).send({
+                  message: "user is created",
+                  data: result
+
+
+                });
               })
               .catch((err) => {
                 console.log("db error: ", err);
@@ -233,6 +240,28 @@ const User = {
     }
   },
 
+
+  GetUsers: async (req, res) => {
+    console.log("data to be edited  :", req.body);
+
+    try {
+      let user = await userModel
+        .find({ adminId: req.params.id })
+        .exec();
+      console.log("User", user);
+
+      res.send({
+        message: "user  seccesfully",
+        data: user,
+      });
+    } catch (error) {
+      res.status(500).send({
+        message: "user gettting error",
+      });
+    }
+
+  },
+
   Update: async (req, res) => {
     console.log("data to be edited  :", req.body);
 
@@ -244,7 +273,7 @@ const User = {
       let updated = await userModel
         .findOneAndUpdate({ _id: req.params.id }, profileUpdate, { new: true })
         .exec();
-        console.log("req.body.token🚗🚗🚗🚗🚗:", req.body.token);
+
       console.log("profile updated", updated);
 
       res.send({
@@ -257,7 +286,7 @@ const User = {
         message: "falled to updated profile",
       });
     }
-   }
+  }
 }
 
 module.exports = User
