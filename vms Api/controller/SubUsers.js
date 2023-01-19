@@ -8,7 +8,7 @@ const SubUser = {
     SubUserSignUp: async (req, res) => {
 
         let body = req.body;
-        console.log("body🚗🚗🚗🚗🚗🚗",body)
+        console.log("body",body)
         if (!body.firstName || !body.lastName || !body.email || !body.password || !body.adminId) {
             res.status(400).send(
                 `required field missing, request example :
@@ -46,7 +46,8 @@ const SubUser = {
                                 firstName: body.firstName,
                                 lastName: body.lastName,
                                 adminId: body.adminId,
-                                role: body.role,
+                                role: "user",
+                                isVarifed: true,
                                 email: body.email.toLowerCase(),
                                 password: hashString,
                             },
