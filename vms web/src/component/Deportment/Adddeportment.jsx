@@ -1,4 +1,4 @@
-import React, { useState, useContext,memo } from 'react'
+import React, { useState, useContext } from 'react'
 // import { useCallback } from 'react'
 import { HandleAddDeportment } from '../../services/services';
 import { toast } from 'react-toastify';
@@ -24,7 +24,7 @@ const Adddeportment = () => {
     list.splice(index, 1)
     setinputs(list)
   }
-  
+
 
 
   let contactPerson = contactPersons.map(function (obj) {
@@ -38,9 +38,9 @@ const Adddeportment = () => {
       toast.error("Please enter Deportment Name")
       return
     }
-    console.log(contactPerson.value,"contactPerson.value");
+    console.log(contactPerson.value, "contactPerson.value");
     if (!contactPerson) {
-      console.log(contactPerson,"contactPerson");
+      console.log(contactPerson, "contactPerson");
       toast.error("Please enter Contact Person")
       return
     }
@@ -53,38 +53,6 @@ const Adddeportment = () => {
       navigate('/Deportment')
     }
   }
-
-  // const handleAddDeportment = useCallback( 
-  //   () => {
-  //     const ff = async (e)=>{
-
-  //       e.preventDefault()
-  //       if (!deportmentName) {
-  //         toast.error("Please enter Deportment Name")
-  //         return
-  //       }
-  //       if (!contactPerson.value) {
-  //         toast.error("Please enter Contact Person")
-  //         return
-  //       }
-  //       const response = await HandleAddDeportment({
-  //         deportmentName,
-  //         contactPerson,
-  //         createdBy: state.user._id
-  //       })
-  //       if (response) {
-  //         navigate('/Deportment')
-  //       }
-  //     }
-  //     ff()
-  //   }, [contactPerson, deportmentName, navigate, state.user._id],
-  // )
-
-
-
-
-
-
 
   return (
     <>
@@ -103,21 +71,21 @@ const Adddeportment = () => {
                 onChange={(e) => { handleInputvalue(e, index) }}
               />
               {index === 0 ? <></> :
-                <button type='dubmit' onClick={()=>removeInputField(index)}>del</button>}
+                <button type='dubmit' onClick={() => removeInputField(index)}>del</button>}
             </div>
           ))
         }
         <br />
-        <button onClick={(e) => { setinputs([...contactPersons, { contactPersons: '' }]) }} disabled={contactPersons.length >= 4}>add more</button>
         <button type='submit'>Add Deportment</button>
       </form>
+      <button onClick={(e) => { setinputs([...contactPersons, { contactPersons: '' }]) }} disabled={contactPersons.length >= 4}>add more</button>
 
 
     </>
   )
 }
 
-export default memo(Adddeportment)
+export default Adddeportment
 
 
 
