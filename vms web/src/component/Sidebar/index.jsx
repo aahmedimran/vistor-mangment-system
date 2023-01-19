@@ -130,12 +130,8 @@ const Sidebar = () => {
                     </div>
                   </NavLink>
 
-
-
-
-
-
-                </> : <>
+                </> : 
+                <>
 
                   <NavLink to="/Dashboard">
                     <div className="top_section-dash">
