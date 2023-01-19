@@ -16,7 +16,8 @@ router.put("/Update/:id",isAuth, User.Update);
 
 // subUserSchema Routes
 router.post("/SubUserSignUp",isAuth, SubUser.SubUserSignUp);
-
+router.get("/GetUsers/:id",isAuth, User.GetUsers);
+router.get("/GetDeportmentspacific/:id",isAuth, deportment.GetDeportmentspacific);
 
 
 // deportment Routes
