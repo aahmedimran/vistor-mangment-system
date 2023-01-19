@@ -1,6 +1,7 @@
 const express = require("express");
 const User = require("../controller/User")
 const deportment = require("../controller/deportment");
+const SubUser = require("../controller/SubUsers");
 const isAuth = require("../controller/isAuth")
 const router = express.Router();
 // user Routes
@@ -10,6 +11,13 @@ router.post("/Otp", User.Otp);
 router.post("/LogOut", User.LogOut);
 router.get("/Profile",isAuth, User.Profile);
 router.put("/Update/:id",isAuth, User.Update);
+
+
+
+// subUserSchema Routes
+router.post("/SubUserSignUp",isAuth, SubUser.SubUserSignUp);
+
+
 
 // deportment Routes
 router.post("/AddDeportment",isAuth, deportment.AddDeportment);

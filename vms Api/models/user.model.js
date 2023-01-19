@@ -6,11 +6,11 @@ let userSchema = new mongoose.Schema({
   email: { type: String, required: true },
   password: { type: String, required: true },
   isVarifed: { type: Boolean, default: false },
-  role: { type: String, required: true },
-  otp: { type: String }
+  role: { type: String },
+  otp: { type: String },
+  adminId: { type: String }
 }, {
   timestamps: true
 })
-// const userModel = mongoose.model("User", userSchema);
 
 module.exports = mongoose.model("User", userSchema)

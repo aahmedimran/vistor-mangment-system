@@ -26,7 +26,7 @@ const User = {
     userModel.findOne(
       { email: body.email },
       // { email:1, firstName:1, lastName:1, age:1, password:0 },
-      "email firstName lastName password isVarifed role",
+      "email firstName lastName password isVarifed adminId role",
       (err, user) => {
         if (!err) {
   
@@ -61,6 +61,7 @@ const User = {
                     email: user.email,
                     firstName: user.firstName,
                     lastName: user.lastName,
+                    adminId : user.adminId,
                     role: user.role,
                     _id: user._id,
   
@@ -134,7 +135,7 @@ const User = {
             });
 
             let mailOptions = {
-              from: "ahmed.eng2709@gmail.com",
+              from: "aaaaaa@gmail.com",
               to: body.email,
               subject: "Sending Email Using Node.js",
               html: `<p>Enter <b>${otp} </b> in the app to verifiy your email address and complete</p>`,

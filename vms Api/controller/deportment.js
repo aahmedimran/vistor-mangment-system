@@ -22,6 +22,8 @@ const deportment = {
       });
 
     } catch (error) {
+
+      console.log(error,"🚗🚗🚗")
       res.status(500).send({
         message: "failed to create deportment"
       });
@@ -95,14 +97,6 @@ const deportment = {
         message: "falled to updated deportment data",
       });
     }
-
-
-
-
-
-
-
-
   },
 
 DeleteDeportment :async(req,res)=>{
@@ -123,11 +117,6 @@ DeleteDeportment :async(req,res)=>{
       message: "falled to deleted deportment",
     });
   }
-
-
-
-
-
 
 }
 

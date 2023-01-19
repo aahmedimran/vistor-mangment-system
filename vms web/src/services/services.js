@@ -35,7 +35,7 @@ const LogoutHandler = async (data) => {
 
 const HandleAddDeportment = async (data) => {
   try {
-    const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/AddDeportment`, data, { withCredentials: true })
+    const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/AddDeportment`, data, { withCredentials: true }, { 'Content-Type': 'application/json' })
     console.log(response.data, "response")
     return response
   }
