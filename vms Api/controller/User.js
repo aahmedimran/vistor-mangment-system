@@ -1,11 +1,12 @@
 const userModel = require("../models/user.model")
-const { stringToHash, varifyHash } = require("bcrypt-inzi");
+// const { stringToHash, varifyHash } = require("bcrypt-inzi");
+const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 
 const nodemailer = require("nodemailer")
 const User = {
 
-  Login: (req, res) => {
+  Login: async (req, res) => {
 
     let body = req.body;
     console.log("body", body);
@@ -32,7 +33,8 @@ const User = {
 
           if (user) {
             // user found
-            varifyHash(body.password, user.password).then((isMatched) => {
+            bcrypt.compare(body.password, user.password).then((isMatched) => {
+              // varifyHash(body.password, user.password).then((isMatched) => {
               console.log("isMatched: ", isMatched);
 
               if (isMatched && user.isVarifed) {
@@ -109,7 +111,7 @@ const User = {
 
     // check if user already exist // query email user
 
-    userModel.findOne({ email: body.email }, (err, user) => {
+    userModel.findOne({ email: body.email }, async (err, user) => {
       if (!err) {
         console.log("user");
 
@@ -122,9 +124,9 @@ const User = {
           return;
         } else {
           //user not already exist
-
-          stringToHash(body.password).then((hashString) => {
-
+          const salt = await bcrypt.genSalt(10);
+          bcrypt.hash(body.password, salt).then((hashString) => {
+            console.log(hashString, "🚗🚗🚗🚗🚗🚗🚗")
             const otp = `${Math.floor(1000 + Math.random() * 900000)}`;
 
             let transporter = nodemailer.createTransport({
@@ -151,8 +153,6 @@ const User = {
 
 
             });
-
-
             userModel.create(
               {
                 firstName: body.firstName,
@@ -286,7 +286,33 @@ const User = {
         message: "falled to updated profile",
       });
     }
-  }
-}
+  },
 
+  UpdatePassword: async (req, res) => {
+    console.log("data :", req.body);
+    let passwordUpdate = {}
+    const salt = await bcrypt.genSalt(10);
+    bcrypt.hash(req.body.password, salt).then(async (hashString) => {
+      passwordUpdate.password = hashString
+      try {
+
+        let updated = await userModel
+          .findOneAndUpdate({ _id: req.params.id }, passwordUpdate, { new: true })
+          .exec();
+        // 
+        console.log("password updated", updated);
+
+        res.send({
+          message: "password updated seccesfully",
+
+          data: updated,
+        });
+      } catch (error) {
+        res.status(500).send({
+          message: "falled to updated password",
+        });
+      }
+    })
+  },
+}
 module.exports = User
