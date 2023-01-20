@@ -2,6 +2,7 @@ const express = require("express");
 const User = require("../controller/User")
 const deportment = require("../controller/deportment");
 const SubUser = require("../controller/SubUsers");
+const Vistor = require("../controller/vistor");
 const isAuth = require("../controller/isAuth")
 const router = express.Router();
 // user Routes
@@ -26,4 +27,12 @@ router.get("/GetDeportment",isAuth, deportment.GetDeportment);
 router.get("/GetSingleDeportment/:id",isAuth, deportment.GetSingleDeportment);
 router.put("/UpdateDeportment/:id",isAuth, deportment.UpdateDeportment);
 router.delete("/DeleteDeportment/:id",isAuth, deportment.DeleteDeportment);
+
+
+// Vistor Routes
+router.post("/AddVistor",isAuth, Vistor.AddVistor);
+router.get("/Getvistor",isAuth, Vistor.Getvistor);
+
+
+
 module.exports = router;

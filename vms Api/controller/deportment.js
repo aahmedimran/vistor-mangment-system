@@ -23,7 +23,7 @@ const deportment = {
 
     } catch (error) {
 
-      console.log(error,"🚗🚗🚗")
+      console.log(error,"error")
       res.status(500).send({
         message: "failed to create deportment"
       });
@@ -38,9 +38,6 @@ const deportment = {
 
     try {
       let deportment = await deportmentModel.find({}).exec();
-
-      // console.log("all deportment");
-
       res.send({
         message: "all deportment",
         data: deportment,
