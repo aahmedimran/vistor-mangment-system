@@ -267,7 +267,7 @@ const User = {
 
     let profileUpdate = {}
     if (req.body.firstName) profileUpdate.firstName = req.body.firstName;
-    if (req.body.secondName) profileUpdate.secondName = req.body.secondName;
+    if (req.body.lastName) profileUpdate.lastName = req.body.lastName;
 
     try {
       let updated = await userModel
