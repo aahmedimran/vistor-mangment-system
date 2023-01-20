@@ -1,14 +1,12 @@
 const userModel = require("../models/user.model")
-const { stringToHash, varifyHash } = require("bcrypt-inzi");
+const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 
 
 const SubUser = {
-
     SubUserSignUp: async (req, res) => {
-
         let body = req.body;
-        console.log("body",body)
+        console.log("body", body)
         if (!body.firstName || !body.lastName || !body.email || !body.password || !body.adminId) {
             res.status(400).send(
                 `required field missing, request example :
@@ -26,7 +24,7 @@ const SubUser = {
 
         // check if user already exist // query email user
 
-        userModel.findOne({ email: body.email }, (err, user) => {
+        userModel.findOne({ email: body.email }, async (err, user) => {
             if (!err) {
                 console.log("user");
 
@@ -39,8 +37,8 @@ const SubUser = {
                     return;
                 } else {
                     //user not already exist
-
-                    stringToHash(body.password).then((hashString) => {
+                    const salt = await bcrypt.genSalt(10);
+                    bcrypt.hash(body.password, salt).then((hashString) => {
                         userModel.create(
                             {
                                 firstName: body.firstName,
