@@ -20,7 +20,7 @@ function App() {
           });
         if (response.status === 200) {
           console.log("response : ", response.data);
-          // dispatch({ type: "USER_LOGIN", payload: response.data.profile });
+       
           dispatch({ type: "USER_LOGIN", payload: response.data });
         } else {
           dispatch({ type: "USER_LOGOUT" });
