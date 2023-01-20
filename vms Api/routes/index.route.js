@@ -6,13 +6,13 @@ const Vistor = require("../controller/vistor");
 const isAuth = require("../controller/isAuth")
 const router = express.Router();
 // user Routes
-router.post("/Login", User.Login);
+router.post("/Login",User.Login);
 router.post("/SignUp", User.SignUp);
 router.post("/Otp", User.Otp);
 router.post("/LogOut", User.LogOut);
 router.get("/Profile",isAuth, User.Profile);
 router.put("/Update/:id",isAuth, User.Update);
-
+router.put("/UpdatePassword/:id",isAuth, User.UpdatePassword);
 
 
 // subUserSchema Routes
