@@ -10,6 +10,8 @@ router.post("/Login",User.Login);
 router.post("/SignUp", User.SignUp);
  router.post("/Otp", User.Otp);
  router.post("/ResendOtp", User.ResendOtp);
+//  router.get("/verifyUser/:id/:otp", User.verifyUser);
+ router.get("/verifyUser/:otp", User.verifyUser);
  router.post("/ResetPassword", User.ResetPassword);
 router.post("/LogOut", User.LogOut);
 router.get("/Profile",isAuth, User.Profile);

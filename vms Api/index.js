@@ -24,10 +24,6 @@ app.get('/', (req, res) => {
 })
 app.use("/api", router)
 
-
-
-
-
 const start = async () => {
   try {
     connectDB(process.env.MONGODB_URL);

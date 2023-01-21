@@ -30,6 +30,10 @@ const User = {
         if (!err) {
 
           if (user) {
+            if (!user.isVarifed) {
+              res.status(401).send({ message: "Email is not  Varifed" });
+              return;
+            }
             // user found
             bcrypt.compare(body.password, user.password).then((isMatched) => {
               console.log("isMatched: ", isMatched);
@@ -123,32 +127,12 @@ const User = {
           //user not already exist
           const salt = await bcrypt.genSalt(10);
           bcrypt.hash(body.password, salt).then((hashString) => {
-            const otp = `${Math.floor(1000 + Math.random() * 900000)}`;
-
-            let transporter = nodemailer.createTransport({
-              service: "gmail",
-              auth: {
-                user: process.env.Email_SENDER,
-                pass: process.env.PASSWARD_SENDER,
-              },
-            });
-
-            let mailOptions = {
-              from: "aaaaaa@gmail.com",
-              to: body.email,
-              subject: "Sending Email Using Node.js",
-              html: `<p>Enter <b>${otp} </b> in the app to verifiy your email address and complete</p>`,
-            };
-
-            transporter.sendMail(mailOptions, function (error, info) {
-              if (error) {
-                console.log(error);
-              } else {
-                console.log("Email sent: " + info.response);
-              }
-
-
-            });
+            const characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            let otp = '';
+            for (let i = 0; i < 25; i++) {
+              otp += characters[Math.floor(Math.random() * characters.length)];
+            }
+            
             userModel.create(
               {
                 firstName: body.firstName,
@@ -159,13 +143,44 @@ const User = {
                 otp,
               })
               .then((result) => {
+               
                 console.log("data saved: ", result);
                 res.status(200).send({
                   message: "user is created",
                   data: result
-
-
                 });
+
+                
+                let transporter = nodemailer.createTransport({
+                  service: "gmail",
+                  auth: {
+                    user: process.env.Email_SENDER,
+                    pass: process.env.PASSWARD_SENDER,
+                  },
+                });
+
+                let mailOptions = {
+                  from: "aaaaaa@gmail.com",
+                  to: body.email,
+                  subject: "Sending Email Using Node.js",
+                  html: `<p>Hi ${result.firstName}  , Enter <b>
+                   </b> 
+                   in the app to verifiy your email address and complete</p>
+                  </b>
+    
+                  <a href = "http://localhost:3001/api/verifyUser/${otp}"> verify now</a>`,
+                };
+                transporter.sendMail(mailOptions, function (error, info) {
+                  if (error) {
+                    console.log(error);
+                  } else {
+                    console.log("Email sent: " + info.response);
+                  }
+    
+    
+                });
+
+
               })
               .catch((err) => {
                 console.log("db error: ", err);
@@ -223,7 +238,13 @@ const User = {
           return res.status(200).send({ message: "This User is already verifed" });
         }
         if (email === user.email) {
-          const otp = `${Math.floor(1000 + Math.random() * 900000)}`;
+          const characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+          let otp = '';
+          for (let i = 0; i < 25; i++) {
+            otp += characters[Math.floor(Math.random() * characters.length)];
+          }
+
+          // const otp = `${Math.floor(1000 + Math.random() * 900000)}`;
           let transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
@@ -236,11 +257,12 @@ const User = {
             from: "aaaaaa@gmail.com",
             to: req.body.email,
             subject: "Sending Email Using Node.js",
-            html: `<p>Hi ${user.firstName} please   Enter <b>${otp} </b> in the app to verifiy your email address and complete</p>
-              click here to </b>
-               <a href = 'localhost:3001/api/Otp${user.email}'>verify now</a> 
-              
-              `,
+            html:` <p>Hi ${user.firstName} , Enter <b>
+            </b> 
+            in the app to verifiy your email address and complete</p>
+           </b>
+
+           <a href = "http://localhost:3001/api/verifyUser/${user._id}/${otp}"> verify now</a>`,
 
           };
           transporter.sendMail(mailOptions, function (error, info) {
@@ -456,6 +478,21 @@ const User = {
     }
   },
 
+  verifyUser: async (req, res) => {
+    try {
+      // const user = await userModel.findOne({ _id: req.params.id });
+      // if (!user) return res.status(400).send("Invalid link user");
+      const token = await userModel.findOne({otp: req.params.otp,});
+      if (!token) return res.status(400).send("Invalid link otp");
+      // let _id = user._id;
+      let otp = req.params.otp;
+      await userModel.updateOne({ otp }, { otp: null, isVarifed: true });
+      console.log( "email verified sucessfully")
+      res.send("email verified sucessfully");
+    } catch (error) {
+      res.status(400).send("An error occured catch");
+    }
 
+  }
 }
 module.exports = User
