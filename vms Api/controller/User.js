@@ -34,7 +34,6 @@ const User = {
           if (user) {
             // user found
             bcrypt.compare(body.password, user.password).then((isMatched) => {
-              // varifyHash(body.password, user.password).then((isMatched) => {
               console.log("isMatched: ", isMatched);
 
               if (isMatched && user.isVarifed) {
@@ -345,33 +344,67 @@ const User = {
     }
   },
 
+  // UpdatePassword: async (req, res) => {
+  //   console.log("data :", req.body);
+  //   let passwordUpdate = {}
+  //   const salt = await bcrypt.genSalt(10);
+  //   bcrypt.hash(req.body.password, salt).then(async (hashString) => {
+  //     passwordUpdate.password = hashString
+  //     try {
+
+  //       let updated = await userModel
+  //         .findOneAndUpdate({ _id: req.params.id }, passwordUpdate, { new: true })
+  //         .exec();
+  //       // 
+  //       console.log("password updated", updated);
+
+  //       res.send({
+  //         message: "password updated seccesfully",
+
+  //         data: updated,
+  //       });
+  //     } catch (error) {
+  //       res.status(500).send({
+  //         message: "falled to updated password",
+  //       });
+  //     }
+  //   })
+  // },
   UpdatePassword: async (req, res) => {
-    console.log("data :", req.body);
-    let passwordUpdate = {}
-    const salt = await bcrypt.genSalt(10);
-    bcrypt.hash(req.body.password, salt).then(async (hashString) => {
-      passwordUpdate.password = hashString
-      try {
 
-        let updated = await userModel
-          .findOneAndUpdate({ _id: req.params.id }, passwordUpdate, { new: true })
-          .exec();
-        // 
-        console.log("password updated", updated);
+    console.log(req.body, "req.body🚗🚗🚗🚗");
+    try {
+      console.log(req.body, "try");
+      let  _id = req.body._id;
+      let previousPassword = req.body.previousPassword;
+      let newPassword = req.body.newPassword;
 
-        res.send({
-          message: "password updated seccesfully",
+      if (!_id || !previousPassword || !newPassword) {
+        return res.status(400).send("empty password change details ate not allowed");
+      } else {
+        const user = await userModel.findOne({ _id });
+        bcrypt.compare(req.body.previousPassword, user.password).then(async (isMatched) => {
+          if (isMatched) {
+            const salt = await bcrypt.genSalt(10);
+            bcrypt.hash(req.body.newPassword, salt).then(async (hashString) => {
+              await userModel.updateOne({ _id }, { password: hashString });
 
-          data: updated,
-        });
-      } catch (error) {
-        res.status(500).send({
-          message: "falled to updated password",
-        });
+              return res.status(200).send({ message: "Password Update" });
+            })
+          } else {
+            return res.status(403).send({ message: "error Password Update" });
+          }
+
+        })
       }
-    })
+    } catch (error) {
+      console.log(error, "error");
+      res.json({
+        status: "failed",
+        message: "error.message",
+      });
+    }
   },
-
 
 
 }

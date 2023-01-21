@@ -13,7 +13,8 @@ router.post("/SignUp", User.SignUp);
 router.post("/LogOut", User.LogOut);
 router.get("/Profile",isAuth, User.Profile);
 router.put("/Update/:id",isAuth, User.Update);
-router.put("/UpdatePassword/:id",isAuth, User.UpdatePassword);
+// router.put("/UpdatePassword/:id",isAuth, User.UpdatePassword);
+router.post("/UpdatePassword",isAuth, User.UpdatePassword);
 
 
 // subUserSchema Routes
