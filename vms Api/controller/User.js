@@ -1,5 +1,4 @@
 const userModel = require("../models/user.model")
-// const { stringToHash, varifyHash } = require("bcrypt-inzi");
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 
@@ -375,7 +374,7 @@ const User = {
     console.log(req.body, "req.body🚗🚗🚗🚗");
     try {
       console.log(req.body, "try");
-      let  _id = req.body._id;
+      let _id = req.body._id;
       let previousPassword = req.body.previousPassword;
       let newPassword = req.body.newPassword;
 
@@ -396,6 +395,58 @@ const User = {
           }
 
         })
+      }
+    } catch (error) {
+      console.log(error, "error");
+      res.json({
+        status: "failed",
+        message: "error.message",
+      });
+    }
+  },
+
+  ResetPassword: async (req, res) => {
+    try {
+      let email = req.body.email;
+      let newPassword = req.body.newPassword;
+      if (!email || !newPassword) {
+        return res.status(400).send("empty email details ate not allowed");
+      } else {
+        const user = await userModel.findOne({ email });
+        if (email === user.email) {
+          const otp = `${Math.floor(1000 + Math.random() * 900000)}`;
+          let transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+              user: process.env.Email_SENDER,
+              pass: process.env.PASSWARD_SENDER,
+            },
+          });
+          let mailOptions = {
+            from: "aaaaaa@gmail.com",
+            to: req.body.email,
+            subject: "Sending Email Using Node.js",
+            html: `<p>Hi ${user.firstName} please   Enter <b>${otp} </b> in the app to verifiy your email address and complete</p>
+              click here to </b>
+               <a href = 'localhost:3001/api/Otp${user.email}'>verify now</a>  `,
+          };
+          transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log("Email sent: " + info.response);
+            }
+
+          })
+
+          const salt = await bcrypt.genSalt(10);
+          bcrypt.hash(req.body.newPassword, salt).then(async (hashString) => {
+            await userModel.updateOne({ email }, { password: hashString, isVarifed: false, otp: otp });
+            return res.status(200).send({ message: "Reset Password Sucsessfully" });
+          })
+        } else {
+          return res.status(403).send({ message: "incorrect otp" });
+        }
       }
     } catch (error) {
       console.log(error, "error");
