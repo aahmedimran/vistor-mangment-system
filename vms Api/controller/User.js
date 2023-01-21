@@ -126,14 +126,13 @@ const User = {
           //user not already exist
           const salt = await bcrypt.genSalt(10);
           bcrypt.hash(body.password, salt).then((hashString) => {
-            console.log(hashString, "🚗🚗🚗🚗🚗🚗🚗")
             const otp = `${Math.floor(1000 + Math.random() * 900000)}`;
 
             let transporter = nodemailer.createTransport({
               service: "gmail",
               auth: {
-                user: "ahmed.eng2709@gmail.com",
-                pass: "reylbhjxktkesqne",
+                user: process.env.Email_SENDER,
+                pass: process.env.PASSWARD_SENDER,
               },
             });
 
@@ -203,6 +202,64 @@ const User = {
           return res.status(200).send({ message: "correct otp" });
         } else {
           return res.status(403).send({ message: "incorrect otp" });
+        }
+      }
+    } catch (error) {
+      console.log(error, "error");
+      res.json({
+        status: "failed",
+        message: "error.message",
+      });
+    }
+  },
+
+  ResendOtp: async (req, res) => {
+
+    console.log(req.body.email, "req.body.email")
+    try {
+      let email = req.body.email;
+      if (!email) {
+        return res.status(400).send("empty email details ate not allowed");
+      } else {
+        const user = await userModel.findOne({ email });
+        if (user.isVarifed) {
+          return res.status(200).send({ message: "This User is already verifed" });
+        }
+        if (email === user.email) {
+          const otp = `${Math.floor(1000 + Math.random() * 900000)}`;
+          let transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+              user: process.env.Email_SENDER,
+              pass: process.env.PASSWARD_SENDER,
+            },
+          });
+
+          let mailOptions = {
+            from: "aaaaaa@gmail.com",
+            to: req.body.email,
+            subject: "Sending Email Using Node.js",
+            html: `<p>Hi ${user.firstName} please   Enter <b>${otp} </b> in the app to verifiy your email address and complete</p>
+              click here to </b>
+               <a href = 'localhost:3001/api/Otp${user.email}'>verify now</a> 
+              
+              `,
+
+          };
+          transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log("Email sent: " + info.response);
+            }
+
+          })
+
+          await userModel.updateOne({ email }, { otp });
+
+          return res.status(200).send({ message: "otp resended" });
+        } else {
+          return res.status(403).send({ message: "Error in resend  otp" });
         }
       }
     } catch (error) {
@@ -314,5 +371,8 @@ const User = {
       }
     })
   },
+
+
+
 }
 module.exports = User
