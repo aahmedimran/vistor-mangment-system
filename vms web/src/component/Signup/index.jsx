@@ -74,6 +74,7 @@ const {state} = useContext(GlobalContext)
       lastName,
       email,
       password,
+      role : "admin"
     })
     if (response) {
 
