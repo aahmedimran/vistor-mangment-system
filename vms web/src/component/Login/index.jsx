@@ -18,7 +18,7 @@ import { useContext } from 'react';
 import { GlobalContext } from "../../Context/context";
 import { Loginhandler } from '../../services/services';
 import { useNavigate } from 'react-router';
-
+import axios from 'axios'
 
 const theme = createTheme();
 
@@ -28,7 +28,7 @@ export default function Login() {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-
+  const [verify, setverify] = useState(false)
   const user = state.user
 
   useEffect(() => {
@@ -54,11 +54,14 @@ export default function Login() {
       email,
       password
     })
-    if (response) {
-      dispatch({ type: "USER_LOGIN", payload: response.data.profile });
+    if (response.status === 200) {
+      dispatch({ type: "USER_LOGIN", payload: response.data.profile })
       navigate("/Dashboard")
     }
-
+    if (response.response.status === 402) {
+      console.log("aaa🚗🚗🚗🚗🚗")
+      setverify(true)
+    }
   };
 
   return (
@@ -72,7 +75,19 @@ export default function Login() {
             flexDirection: 'column',
             alignItems: 'center',
           }}
-        >
+        >{verify ? <p style={{ width: "56vw" }}>Your Email is not Varifed,<button onClick={async () => {
+
+          try {
+            let response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/ResendOtp`,{
+              email : email
+            }
+            )
+            console.log(response, "response");
+          }
+          catch (e) {
+            console.log(e, "Error");
+          }
+        }}>Click here</button>  to Resend Verifiction Email</p> : <></>}
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
